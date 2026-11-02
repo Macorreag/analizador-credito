@@ -4,6 +4,20 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-11-02
+
+### Cambiado
+
+- Valores de ejemplo neutros por defecto (sin publicar un plan personal concreto).
+- Matriz de sensibilidad con formato de moneda es-CO.
+- Estado de “abonos sin efecto” cuando un abono no cambia el resultado.
+
+### Corregido
+
+- La base de GitHub Pages se aplica también en `vite preview`.
+- `minimatch` fijado a una versión sin la vulnerabilidad moderada; `npm audit` limpio.
+- Actualización de acciones de GitHub (checkout, setup-node, configure-pages, upload/deploy-pages).
+
 ## [1.0.0] — 2026-11-02
 
 ### Añadido
@@ -39,5 +53,6 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 - Muestra representativa de combinaciones para identidades contables.
 - Prueba de interacción ligera con jsdom.
 
-[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.0
