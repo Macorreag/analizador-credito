@@ -171,7 +171,7 @@ No se modelan gastos básicos, score, historial ni estabilidad laboral. El DTI e
 
 ## 10. Tasa de usura
 
-En Colombia la tasa de usura es **1,5 veces el interés bancario corriente** certificado por la Superfinanciera. La app incluye una referencia editable con fecha (noviembre de 2026: **28,34% EA**) y advierte si la tasa del crédito la supera o se acerca.
+Para crédito de consumo en Colombia, la tasa de usura es **1,5 veces el interés bancario corriente** certificado por la Superfinanciera. Para vivienda aplican reglas distintas y la referencia de esta app no debe usarse como si fuera la misma. La app incluye una referencia editable con fecha (noviembre de 2026: **28,34% EA**) y advierte si la tasa del crédito la supera o se acerca.
 
 La referencia **no se actualiza sola**; el valor oficial cambia cada mes. Verifica siempre la fuente:
 

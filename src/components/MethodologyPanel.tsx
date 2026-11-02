@@ -158,7 +158,7 @@ export function MethodologyPanel({
         <SectionHead
           kicker="04 · Usura"
           title="El techo legal, con fecha"
-          description="La tasa de usura es 1,5 veces el interés bancario corriente certificado por la Superfinanciera."
+          description="Para crédito de consumo, la tasa de usura es 1,5 veces el interés bancario corriente certificado por la Superfinanciera."
           id="method-usury"
         />
         <Card className="card--pad">
