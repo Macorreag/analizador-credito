@@ -8,9 +8,9 @@ import { computeLoan, type LoanConfig } from './credit';
 
 function config(overrides: Partial<LoanConfig> = {}): LoanConfig {
   return {
-    principal: 90_000_000,
-    annualRatePct: 22.09,
-    termMonths: 84,
+    principal: 60_000_000,
+    annualRatePct: 19.5,
+    termMonths: 72,
     graceMonths: 0,
     graceType: 'none',
     system: 'french',
@@ -37,13 +37,13 @@ describe('capacidad de pago', () => {
   it('calcula DTI, holgura y estrés', () => {
     const loan = config();
     const analysis = computeLoan(loan);
-    const result = analyzeAffordability(loan, analysis, input({ monthlyIncome: 6_000_000 }));
+    const result = analyzeAffordability(loan, analysis, input({ monthlyIncome: 4_500_000 }));
 
     expect(result.ok).toBe(true);
     expect(result.basePayment).toBeCloseTo(analysis.maxPayment, 6);
-    expect(result.dtiPct).toBeCloseTo((analysis.maxPayment / 6_000_000) * 100, 6);
-    expect(result.capacity).toBeCloseTo(2_400_000, 6);
-    expect(result.headroom).toBeCloseTo(2_400_000 - analysis.maxPayment, 6);
+    expect(result.dtiPct).toBeCloseTo((analysis.maxPayment / 4_500_000) * 100, 6);
+    expect(result.capacity).toBeCloseTo(1_800_000, 6);
+    expect(result.headroom).toBeCloseTo(1_800_000 - analysis.maxPayment, 6);
     expect(result.stressPayment).toBeGreaterThan(analysis.maxPayment);
     expect(result.stressDtiPct ?? 0).toBeGreaterThan(result.dtiPct ?? 0);
     expect(result.status).toBe('tight');
@@ -93,7 +93,7 @@ describe('capacidad de pago', () => {
       'invest',
     );
     expect(
-      analyzeAffordability(loan, analysis, input({ investmentEaPct: 22.2 })).investAdvice,
+      analyzeAffordability(loan, analysis, input({ investmentEaPct: 19.7 })).investAdvice,
     ).toBe('similar');
   });
 });

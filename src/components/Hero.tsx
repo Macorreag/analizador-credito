@@ -89,7 +89,7 @@ export function Hero() {
               MES 1
             </text>
             <text x="352" y="247">
-              MES 84
+              MES 60
             </text>
           </g>
           <g fill="#C9A227" fontFamily="IBM Plex Mono, monospace" fontSize="9">

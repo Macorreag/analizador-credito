@@ -4,9 +4,9 @@ import { computeLoan, type LoanConfig } from './credit';
 
 function config(overrides: Partial<LoanConfig> = {}): LoanConfig {
   return {
-    principal: 90_000_000,
-    annualRatePct: 22.09,
-    termMonths: 84,
+    principal: 60_000_000,
+    annualRatePct: 19.5,
+    termMonths: 72,
     graceMonths: 0,
     graceType: 'none',
     system: 'french',

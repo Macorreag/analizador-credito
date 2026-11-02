@@ -33,7 +33,7 @@ export interface CostConfig {
 
 export interface LoanConfig {
   principal: number;
-  /** Tasa efectiva anual, en porcentaje (ej. 22.09). */
+  /** Tasa efectiva anual, en porcentaje (ej. 18.00). */
   annualRatePct: number;
   termMonths: number;
   graceMonths: number;

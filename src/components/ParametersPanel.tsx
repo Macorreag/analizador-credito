@@ -131,7 +131,7 @@ export function ParametersPanel({
             step={500_000}
           />
           <div className="chips" style={{ marginTop: 7 }}>
-            {[30_000_000, 50_000_000, 90_000_000, 150_000_000].map((amount) => (
+            {[30_000_000, 50_000_000, 100_000_000, 150_000_000].map((amount) => (
               <button
                 key={amount}
                 type="button"

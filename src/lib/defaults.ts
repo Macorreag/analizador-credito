@@ -20,9 +20,9 @@ export const USURY_REFERENCE = {
 } as const;
 
 export const DEFAULT_CONFIG: LoanConfig = {
-  principal: 90_000_000,
-  annualRatePct: 22.09,
-  termMonths: 84,
+  principal: 50_000_000,
+  annualRatePct: 18,
+  termMonths: 60,
   graceMonths: 0,
   graceType: 'none',
   system: 'french',

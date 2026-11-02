@@ -13,9 +13,9 @@ import {
   type LoanConfig,
 } from './credit';
 
-const PRINCIPAL = 90_000_000;
-const EA = 22.09;
-const TERM = 84;
+const PRINCIPAL = 60_000_000;
+const EA = 19.5;
+const TERM = 72;
 
 function makeConfig(overrides: Partial<LoanConfig> = {}): LoanConfig {
   return {
@@ -67,9 +67,9 @@ function expectFinancialIdentities(analysis: LoanAnalysis): void {
 
 describe('conversión de tasas', () => {
   it('convierte una EA a tasa periódica mensual y de vuelta', () => {
-    const monthly = monthlyRateFromEA(22.09);
-    expect(monthly).toBeCloseTo(0.016771, 6);
-    expect(eaFromMonthly(monthly)).toBeCloseTo(22.09, 8);
+    const monthly = monthlyRateFromEA(19.5);
+    expect(monthly).toBeCloseTo(0.0149563, 6);
+    expect(eaFromMonthly(monthly)).toBeCloseTo(19.5, 8);
   });
 
   it('convierte nominal anual mes vencido (NAMV) a mensual', () => {
@@ -99,7 +99,7 @@ describe('sistema francés', () => {
     expect(analysis.rows).toHaveLength(TERM);
     expect(analysis.months).toBe(TERM);
     expect(analysis.rows[0].payment).toBeCloseTo(analysis.scheduledPayment, 6);
-    expect(analysis.rows[83].balance).toBeCloseTo(0, 6);
+    expect(analysis.rows[TERM - 1].balance).toBeCloseTo(0, 6);
     expect(analysis.totalInterest).toBeGreaterThan(0);
     expectFinancialIdentities(analysis);
   });
@@ -220,7 +220,7 @@ describe('sistemas alemán y americano', () => {
     const german = computeLoan(makeConfig({ system: 'german' }));
 
     expect(german.rows[0].principal).toBeCloseTo(PRINCIPAL / TERM, 6);
-    expect(german.rows[0].payment).toBeGreaterThan(german.rows[83].payment);
+    expect(german.rows[0].payment).toBeGreaterThan(german.rows[TERM - 1].payment);
     expect(german.totalInterest).toBeLessThan(french.totalInterest);
     expectFinancialIdentities(german);
   });
@@ -229,7 +229,7 @@ describe('sistemas alemán y americano', () => {
     const analysis = computeLoan(makeConfig({ system: 'american' }));
     expect(analysis.rows[0].principal).toBe(0);
     expect(analysis.rows[0].payment).toBeCloseTo(PRINCIPAL * monthlyRateFromEA(EA), 6);
-    expect(analysis.rows[83].principal).toBeCloseTo(PRINCIPAL, 6);
+    expect(analysis.rows[TERM - 1].principal).toBeCloseTo(PRINCIPAL, 6);
     expect(analysis.totalInterest).toBeGreaterThan(0);
     expectFinancialIdentities(analysis);
   });
@@ -428,7 +428,7 @@ describe('invariantes en una muestra representativa', () => {
   ];
   const rateTerm: Array<[number, number]> = [
     [0, 12],
-    [22.09, 84],
+    [19.5, 84],
   ];
 
   it('mantiene las identidades contables en 24 combinaciones', () => {
