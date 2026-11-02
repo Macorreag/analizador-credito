@@ -22,7 +22,7 @@ const SERIES = [
   { key: 'interest' as const, label: 'Interés', color: CHART_COLORS.rust },
   { key: 'principal' as const, label: 'Capital', color: CHART_COLORS.gold },
   { key: 'extra' as const, label: 'Abono', color: CHART_COLORS.tealBright },
-  { key: 'other' as const, label: 'Seguros y comisiones', color: CHART_COLORS.steel },
+  { key: 'other' as const, label: 'Otros costos', color: CHART_COLORS.steel },
 ];
 
 export function CompositionChart({ data }: { data: CompositionDatum[] }) {

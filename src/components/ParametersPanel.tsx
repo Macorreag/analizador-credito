@@ -109,7 +109,7 @@ export function ParametersPanel({
           <div className="panel-kicker">Parámetros</div>
           <div className="panel-title">El crédito</div>
         </div>
-        <span className="badge">edit live</span>
+        <span className="badge">en vivo</span>
       </div>
 
       <div className="panel-section">

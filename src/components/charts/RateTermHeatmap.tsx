@@ -79,7 +79,7 @@ export function RateTermHeatmap({
                         }
                       >
                         <span>{value != null ? formatCompactCOP(value) : '—'}</span>
-                        {cell?.isBase ? <small>tu plan</small> : null}
+                        {cell?.isBase ? <small>base</small> : null}
                       </button>
                     </td>
                   );
