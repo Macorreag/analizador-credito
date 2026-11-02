@@ -135,10 +135,14 @@ export function SummaryPanel({
             </p>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-end' }}>
-            {hasExtras && extraSavings > 0 ? (
-              <Badge tone="teal">
-                <TrendDownIcon size={11} /> Ahorras {formatCOP(extraSavings)}
-              </Badge>
+            {hasExtras ? (
+              extraSavings > 0 ? (
+                <Badge tone="teal">
+                  <TrendDownIcon size={11} /> Ahorras {formatCOP(extraSavings)}
+                </Badge>
+              ) : (
+                <Badge tone="gold">Abonos sin efecto</Badge>
+              )
             ) : (
               <Badge tone="gold">Sin abonos todavía</Badge>
             )}

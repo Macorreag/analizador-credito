@@ -81,6 +81,8 @@ npm run build
 npm run preview
 ```
 
+El preview queda en `http://localhost:4173/analizador-credito/`.
+
 > El build usa la base `/analizador-credito/` porque GitHub Pages sirve el proyecto en un subdirectorio. Para un dominio propio, cambia `base` en `vite.config.ts` a `/`.
 
 ## Scripts

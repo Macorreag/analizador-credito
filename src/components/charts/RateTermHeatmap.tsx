@@ -1,4 +1,4 @@
-import { formatCOP, formatPct } from '../../lib/format';
+import { formatCOP, formatCompactCOP, formatPct } from '../../lib/format';
 import type { RateTermGrid } from '../../lib/sensitivity';
 import { mixColor } from './chartUtils';
 
@@ -78,7 +78,7 @@ export function RateTermHeatmap({
                             : `Sin datos para ${rate}% y ${term} meses`
                         }
                       >
-                        <span>{value != null ? `$${(value / 1_000_000).toFixed(1)}M` : '—'}</span>
+                        <span>{value != null ? formatCompactCOP(value) : '—'}</span>
                         {cell?.isBase ? <small>tu plan</small> : null}
                       </button>
                     </td>
