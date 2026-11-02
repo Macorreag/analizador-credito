@@ -62,5 +62,8 @@
   "homepage": "https://macorreag.github.io/analizador-credito/",
   "bugs": {
     "url": "https://github.com/Macorreag/analizador-credito/issues"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1"
   }
 }
