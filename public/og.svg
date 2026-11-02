@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientTransform="translate(170 -40) rotate(35) scale(650 440)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C9A227" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientTransform="translate(1120 600) rotate(-145) scale(680 460)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3E9C8F" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#3E9C8F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="760" y1="120" x2="1140" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#63C2B3"/>
+      <stop offset="1" stop-color="#3E9C8F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#121619"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+  <g stroke="#2B3438" stroke-width="1">
+    <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/>
+    <path d="M90 0V630M180 0V630M270 0V630M360 0V630M450 0V630M540 0V630M630 0V630M720 0V630M810 0V630M900 0V630M990 0V630M1080 0V630"/>
+  </g>
+  <g font-family="DejaVu Sans Mono, monospace" font-size="18" letter-spacing="3" fill="#C9A227">
+    <text x="86" y="96">ANALIZADOR DE CRÉDITO · COLOMBIA</text>
+  </g>
+  <text x="86" y="240" font-family="DejaVu Serif, serif" font-size="78" font-weight="bold" fill="#F1EFE8">Tu crédito,</text>
+  <text x="86" y="334" font-family="DejaVu Serif, serif" font-size="78" font-style="italic" font-weight="bold" fill="#E3C052">sin letra pequeña.</text>
+  <text x="90" y="404" font-family="DejaVu Sans, sans-serif" font-size="25" fill="#CBD0CA">Amortización, abonos, costo efectivo y capacidad de pago.</text>
+  <text x="90" y="444" font-family="DejaVu Sans, sans-serif" font-size="25" fill="#98A29D">Todo se calcula en tu navegador. Nada se envía a un servidor.</text>
+  <g font-family="DejaVu Sans Mono, monospace" font-size="16" fill="#63C2B3">
+    <rect x="88" y="492" width="300" height="44" rx="22" fill="#3E9C8F" fill-opacity=".12" stroke="#3E9C8F" stroke-opacity=".45"/>
+    <circle cx="112" cy="514" r="5" fill="#63C2B3"/>
+    <text x="128" y="520">100% LOCAL · SIN CUENTAS</text>
+    <rect x="404" y="492" width="224" height="44" rx="22" fill="#C9A227" fill-opacity=".08" stroke="#C9A227" stroke-opacity=".4"/>
+    <text x="424" y="520" fill="#E3C052">CÓDIGO ABIERTO</text>
+  </g>
+  <g transform="translate(760 120)">
+    <path d="M0 310C120 310 150 210 240 150C330 90 390 120 480 40" fill="none" stroke="#C9A227" stroke-width="2.5" stroke-dasharray="8 8" opacity=".7"/>
+    <path d="M0 310C100 300 150 250 230 200C310 150 360 160 480 100" fill="none" stroke="url(#line)" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="230" cy="200" r="9" fill="#3E9C8F" stroke="#121619" stroke-width="4"/>
+    <circle cx="480" cy="100" r="11" fill="#63C2B3" stroke="#121619" stroke-width="4"/>
+  </g>
+  <text x="86" y="592" font-family="DejaVu Sans Mono, monospace" font-size="15" fill="#7F8A84">macorreag.github.io/analizador-credito</text>
+</svg>

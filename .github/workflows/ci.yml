@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Formato, lint, tipos, pruebas y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Formato
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Buscar secretos y configuración local versionada
+        shell: bash
+        run: |
+          set -euo pipefail
+          patrones='AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,}|gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY|GOCSPX-[A-Za-z0-9_-]{20,}'
+          if grep -rInE "$patrones" . \
+               --exclude-dir=node_modules \
+               --exclude-dir=.git \
+               --exclude-dir=dist \
+               --exclude-dir=coverage \
+               --exclude-dir=.tools \
+               --exclude=package-lock.json; then
+            echo "::error::Posible secreto en el repositorio."
+            exit 1
+          fi
+
+          if git ls-files | grep -E '(^|/)\.env($|\.)|\.pem$|\.key$|(^|/)id_rsa$'; then
+            echo "::error::Archivo de configuración sensible versionado."
+            exit 1
+          fi
+
+          echo "Sin secretos evidentes ni archivos sensibles versionados."

@@ -1,0 +1,19 @@
+{
+  "name": "Analizador de Crédito",
+  "short_name": "Crédito",
+  "description": "Simulador y diagnóstico de crédito 100% local.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#121619",
+  "theme_color": "#14181B",
+  "lang": "es-CO",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

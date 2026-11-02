@@ -1,0 +1,43 @@
+:root {
+  --bg: #121619;
+  --bg-deep: #0e1215;
+  --surface: #1a2024;
+  --surface-2: #20272b;
+  --surface-3: #262f34;
+  --line: #2b3438;
+  --line-strong: #3b474c;
+  --text: #f1efe8;
+  --text-soft: #cbd0ca;
+  --muted: #98a29d;
+  --muted-strong: #b2bab4;
+  --gold: #c9a227;
+  --gold-bright: #e3c052;
+  --gold-dim: #8d7420;
+  --teal: #3e9c8f;
+  --teal-bright: #63c2b3;
+  --teal-dim: #2c6f67;
+  --rust: #c06a45;
+  --rust-bright: #df8a62;
+  --rust-dim: #7d4530;
+  --steel: #7e93a0;
+  --ok: #63c2b3;
+  --warn: #d6a84b;
+  --danger: #df8a62;
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 9px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.18);
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  --shadow-glow: 0 0 0 1px rgba(201, 162, 39, 0.16), 0 18px 60px rgba(0, 0, 0, 0.3);
+
+  --maxw: 1280px;
+  --gutter: 32px;
+
+  color-scheme: dark;
+}

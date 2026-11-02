@@ -1,0 +1,60 @@
+name: Reportar un error
+description: Algo no funciona o un cálculo no cuadra.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar. No incluyas datos personales reales (nombres, cédulas, extractos, montos de tu crédito). Usa cifras de ejemplo.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Resumen
+      description: ¿Qué esperabas y qué pasó?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. Monto 90.000.000
+        2. Tasa 22,09% EA
+        3. Plazo 84 meses
+        4. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+      description: Si es un cálculo, incluye la fórmula o la cifra que esperabas.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Navegador y dispositivo
+      placeholder: Chrome 140 / Android 15, Firefox / Linux, etc.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Motor de cálculo
+        - Abonos / tabla
+        - Capacidad de pago
+        - Sensibilidad / escenarios
+        - Interfaz / accesibilidad
+        - Documentación
+        - Otro
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmación
+      options:
+        - label: Revisé que no hay datos personales reales en este reporte.
+          required: true

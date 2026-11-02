@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+.npm-cache/
+.tools/
+
+# Build y cobertura
+dist/
+coverage/
+*.tsbuildinfo
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

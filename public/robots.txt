@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://macorreag.github.io/analizador-credito/sitemap.xml

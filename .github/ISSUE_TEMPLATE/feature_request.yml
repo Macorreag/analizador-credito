@@ -1,0 +1,44 @@
+name: Proponer una mejora
+description: Una idea para el análisis, la UX o la documentación.
+title: '[Mejora]: '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: ¿Qué decisión o usuario se ve afectado hoy?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: ¿Cómo lo resolverías? ¿Qué mecanismo financiero o visual añadirías?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: ¿Por qué esta opción y no otra?
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Alcance
+      options:
+        - Cálculo financiero
+        - Nuevo gráfico o tabla
+        - Accesibilidad
+        - Privacidad / seguridad
+        - Documentación
+        - Otro
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmación
+      options:
+        - label: La propuesta no requiere enviar datos personales a un servidor.
+          required: true

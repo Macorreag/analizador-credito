@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Demo en vivo
+    url: https://macorreag.github.io/analizador-credito/
+    about: Prueba la app antes de reportar.
+  - name: Reportar una vulnerabilidad
+    url: https://github.com/Macorreag/analizador-credito/security/advisories/new
+    about: No abras un issue público para problemas de seguridad.
