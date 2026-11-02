@@ -15,8 +15,8 @@ const CONTENT_SECURITY_POLICY = [
   'upgrade-insecure-requests',
 ].join('; ');
 
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/analizador-credito/' : '/',
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/analizador-credito/' : '/',
   plugins: [
     react(),
     {
