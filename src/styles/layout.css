@@ -173,7 +173,7 @@
 
 .shell {
   display: grid;
-  grid-template-columns: 348px minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 30px;
   align-items: start;
   width: 100%;
@@ -327,7 +327,7 @@
   }
 
   .shell {
-    grid-template-columns: 318px minmax(0, 1fr);
+    grid-template-columns: 298px minmax(0, 1fr);
     gap: 22px;
   }
 

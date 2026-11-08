@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { TAB_IDS, type TabId } from './tabsMeta';
 
 const TAB_LABELS: Record<TabId, { label: string; index: string }> = {
-  resumen: { label: 'Resumen', index: '01' },
+  resumen: { label: 'Dashboard', index: '01' },
   amortizacion: { label: 'Amortización', index: '02' },
   escenarios: { label: 'Escenarios', index: '03' },
   sensibilidad: { label: 'Sensibilidad', index: '04' },

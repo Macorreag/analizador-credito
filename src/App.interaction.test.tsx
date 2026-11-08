@@ -42,8 +42,10 @@ function setInputValue(element: HTMLInputElement, value: string) {
 describe('interacción ligera', () => {
   it('carga el resumen sin errores de consola', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    expect(container.textContent).toContain('Análisis del crédito');
     expect(container.textContent).toContain('Costo total del crédito');
     expect(container.textContent).toContain('Cuota máxima');
+    expect(container.textContent).toContain('Primeros 8 pagos');
     expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
@@ -64,6 +66,17 @@ describe('interacción ligera', () => {
 
     expect(container.textContent).toContain('Abono agregado');
     expect(container.textContent).toContain('Mes 1');
+  });
+
+  it('usa el dashboard para ingresar el ingreso y calcular el DTI', () => {
+    const income = container.querySelector<HTMLInputElement>('#dash-income');
+    expect(income).not.toBeNull();
+    act(() => {
+      if (income) setInputValue(income, '8000000');
+    });
+    expect(container.textContent).toContain('DTI');
+    expect(container.textContent).toContain('Capital máximo');
+    expect(container.textContent).toContain('Cuota / ingreso');
   });
 
   it('cambia el monto y lo refleja en el resumen', () => {

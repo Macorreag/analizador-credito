@@ -22,12 +22,11 @@ import { AffordabilityPanel } from './components/AffordabilityPanel';
 import { AmortizationPanel } from './components/AmortizationPanel';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
 import { MethodologyPanel } from './components/MethodologyPanel';
 import { ParametersPanel } from './components/ParametersPanel';
 import { ScenariosPanel } from './components/ScenariosPanel';
 import { SensitivityPanel } from './components/SensitivityPanel';
-import { SummaryPanel } from './components/SummaryPanel';
+import { DashboardPanel } from './components/DashboardPanel';
 import { Tabs } from './components/Tabs';
 import { isTabId, type TabId } from './components/tabsMeta';
 import { Card, EmptyState } from './components/ui';
@@ -240,6 +239,16 @@ export default function App() {
     notify('Datos locales borrados. Empezamos de nuevo.');
   }
 
+  function editParams() {
+    setParamsOpen(true);
+    window.setTimeout(() => {
+      document
+        .getElementById('params-body')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => document.getElementById('principal')?.focus(), 250);
+    }, 0);
+  }
+
   function exportCsv() {
     if (!analysis.ok) {
       notify('Corrige la configuración antes de exportar.');
@@ -258,7 +267,6 @@ export default function App() {
         Saltar al análisis
       </a>
       <Header onPrint={() => window.print()} />
-      <Hero />
 
       <main className="shell" id="main">
         <aside
@@ -322,7 +330,7 @@ export default function App() {
                 </EmptyState>
               </Card>
             ) : activeTab === 'resumen' ? (
-              <SummaryPanel
+              <DashboardPanel
                 config={config}
                 analysis={analysis}
                 baseline={baseline}
@@ -330,16 +338,25 @@ export default function App() {
                 affordabilityResult={affordabilityResult}
                 usuryEaPct={usuryEaPct}
                 usuryPeriodLabel={USURY_REFERENCE.periodLabel}
-                onUsuryChange={setUsuryEaPct}
                 systems={systems}
                 strategies={strategies}
                 levers={levers}
+                grid={grid}
+                ladder={ladder}
+                scenarios={scenarios}
                 onApplyLever={applyLever}
                 onApplySystem={applySystem}
                 onApplyStrategy={applyStrategy}
+                onApplyLadder={applyLadder}
+                onApplyGrid={applyGrid}
+                onAffordabilityChange={(patch) =>
+                  setAffordability((previous) => ({ ...previous, ...patch }))
+                }
                 onNavigate={navigate}
+                onEditParams={editParams}
                 onEditExtras={() => navigate('amortizacion')}
-                scenarios={scenarios}
+                onCsv={exportCsv}
+                onNotify={notify}
               />
             ) : activeTab === 'amortizacion' ? (
               <AmortizationPanel

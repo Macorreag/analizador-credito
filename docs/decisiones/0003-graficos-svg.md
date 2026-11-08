@@ -9,7 +9,7 @@ Recharts funcionaba, pero añadía peso, dependencias y estilos difíciles de co
 
 ## Decisión
 
-Implementar los gráficos con SVG y CSS propios: saldo, composición, dona y mapa de calor HTML.
+Implementar los gráficos con SVG y CSS propios: saldo, composición, barras de costo y mapa de calor HTML.
 
 ## Consecuencias
 

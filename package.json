@@ -1,7 +1,7 @@
 {
   "name": "analizador-credito",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "description": "Analizador de crédito 100% local: amortización, abonos a capital, costo efectivo y capacidad de pago.",
   "license": "MIT",

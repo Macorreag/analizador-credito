@@ -35,7 +35,7 @@
 - ¿La cuota cabe en mi ingreso, y qué pasa si la tasa sube?
 - ¿Abonar o invertir? ¿Cuál es el umbral matemático?
 
-La app corre en el navegador, sin backend, sin cuentas y sin analítica. Tus cifras se quedan en tu dispositivo.
+La vista inicial es un **dashboard** con todos los números del plan: KPIs, composición del costo, capacidad, semáforo, abonos, escenarios, tabla y sensibilidad. Las pestañas quedan para profundizar. La app corre en el navegador, sin backend, sin cuentas y sin analítica: tus cifras se quedan en tu dispositivo.
 
 ## Lo que puedes hacer
 

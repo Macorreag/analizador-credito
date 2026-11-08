@@ -33,8 +33,11 @@ const affordabilityResult = analyzeAffordability(config, analysis, affordability
 describe('render de la aplicación', () => {
   it('renderiza la vista inicial sin errores de ejecución', () => {
     const html = renderToString(<App />);
-    expect(html).toContain('Tu crédito');
+    expect(html).toContain('Análisis del crédito');
+    expect(html).toContain('Panel de control');
     expect(html).toContain('Costo total del crédito');
+    expect(html).toContain('Primeros 8 pagos');
+    expect(html).toContain('Mapa tasa × plazo');
     expect(html).toContain('Parámetros');
     expect(html.length).toBeGreaterThan(20_000);
   });

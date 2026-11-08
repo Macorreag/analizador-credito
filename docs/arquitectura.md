@@ -30,7 +30,7 @@
 - `src/lib/credit.ts` no importa React ni toca el DOM. Recibe `LoanConfig` y devuelve `LoanAnalysis`.
 - `affordability.ts` y `sensitivity.ts` se construyen sobre `computeLoan`; no duplican fórmulas.
 - `storage.ts` sanea datos desconocidos antes de exponerlos: el `localStorage` es una frontera no confiable.
-- `components/` no calcula finanzas; solo formatea y presenta.
+- `components/` no calcula finanzas; solo formatea y presenta. `DashboardPanel` compone el tablero inicial con una grilla de 12 columnas y enlaza al detalle.
 
 ## Flujo de datos
 

@@ -101,8 +101,12 @@ export function BalanceChart({
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           role="img"
-          tabIndex={0}
-          aria-label={`Saldo del crédito mes a mes. Con tu plan termina en ${rows.length} meses; sin abonos, en ${baselineRows.length}. Usa las flechas para explorar y Enter para simular un abono.`}
+          tabIndex={onMonthClick ? 0 : -1}
+          aria-label={
+            onMonthClick
+              ? `Saldo del crédito mes a mes. Con tu plan termina en ${rows.length} meses; sin abonos, en ${baselineRows.length}. Usa las flechas para explorar y Enter para simular un abono.`
+              : `Saldo del crédito mes a mes. Con tu plan termina en ${rows.length} meses; sin abonos, en ${baselineRows.length}.`
+          }
           style={{ cursor: onMonthClick ? 'pointer' : 'default' }}
           onPointerMove={(event) => setHover(monthFromPointer(event))}
           onPointerLeave={() => setHover(null)}

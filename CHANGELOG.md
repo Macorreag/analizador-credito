@@ -4,6 +4,21 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-11-08
+
+### Añadido
+
+- Nueva vista inicial tipo **dashboard**: KPIs, costo, capacidad, semáforo, palancas, abonos, tabla, escenarios, escalera de abonos, sistemas y mapa tasa × plazo en una sola página.
+- Barra de contexto del plan con capital, tasa, plazo, sistema y abonos, y acciones rápidas de edición/exportación.
+- Entrada rápida de ingreso mensual desde la tarjeta de capacidad.
+- Accesos directos desde cada tarjeta al detalle correspondiente.
+
+### Cambiado
+
+- La pestaña “Resumen” pasa a llamarse **Dashboard**.
+- Se eliminó el hero editorial para priorizar los datos y reducir el desplazamiento inicial.
+- El panel de parámetros se compactó en ancho para dar más espacio al tablero.
+
 ## [1.0.1] — 2026-11-02
 
 ### Cambiado
@@ -53,6 +68,7 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 - Muestra representativa de combinaciones para identidades contables.
 - Prueba de interacción ligera con jsdom.
 
-[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.1.0
 [1.0.1]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.0

@@ -1709,64 +1709,6 @@
   );
 }
 
-/* ---------- Donut ---------- */
-.donut-layout {
-  display: grid;
-  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
-  gap: 16px;
-  align-items: center;
-}
-
-.donut-figure svg {
-  display: block;
-  width: 100%;
-  max-width: 220px;
-  height: auto;
-  margin: 0 auto;
-}
-
-.donut-legend {
-  display: grid;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.donut-legend li {
-  display: grid;
-  grid-template-columns: 8px minmax(0, 1fr) auto auto;
-  gap: 7px;
-  align-items: center;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(43, 52, 56, 0.55);
-  font-size: 10.5px;
-}
-
-.donut-legend li:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.donut-label {
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.donut-value {
-  color: var(--text-soft);
-  font-size: 10px;
-}
-
-.donut-pct {
-  min-width: 38px;
-  color: var(--muted);
-  font-size: 9px;
-  text-align: right;
-}
-
 /* ---------- Escalera ---------- */
 .ladder-table {
   width: 100%;
@@ -2148,14 +2090,6 @@
 
   .lever-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .donut-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .donut-figure svg {
-    max-width: 190px;
   }
 
   .method-grid {

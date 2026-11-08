@@ -2,7 +2,7 @@ import type { AffordabilityInput } from './affordability';
 import type { LoanConfig } from './credit';
 
 export const APP_NAME = 'Analizador de Crédito';
-export const APP_VERSION = '1.0.1';
+export const APP_VERSION = '1.1.0';
 export const REPOSITORY_URL = 'https://github.com/Macorreag/analizador-credito';
 export const PAGES_URL = 'https://macorreag.github.io/analizador-credito/';
 
