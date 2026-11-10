@@ -48,7 +48,23 @@ describe('saneamiento de configuración', () => {
       strategy: 'otra',
       graceType: 'rara',
       startDate: 'no-es-fecha',
-      costs: { insuranceMonthlyPct: 20, monthlyFee: -1, originationPct: 90, gmf: 'sí' },
+      costs: {
+        insuranceMonthlyPct: 20,
+        monthlyFee: -1,
+        originationPct: 90,
+        gmf: 'sí',
+        charges: [
+          {
+            id: 'c1',
+            label: 'Honorarios',
+            amount: 50_000,
+            frequency: 'monthly',
+            fromMonth: 2,
+            toMonth: 4,
+          },
+          { id: 'c2', label: '', amount: 10, frequency: 'rara', fromMonth: 1 },
+        ],
+      },
       extras: [
         { id: 'ok', amount: 1_000_000, fromMonth: 2, frequency: 'monthly', toMonth: 4 },
         { id: 'bad', amount: Number.NaN, fromMonth: 1, frequency: 'monthly' },
@@ -67,6 +83,10 @@ describe('saneamiento de configuración', () => {
     expect(config.costs.monthlyFee).toBe(0);
     expect(config.costs.originationPct).toBe(50);
     expect(config.costs.gmf).toBe(false);
+    expect(config.costs.charges).toHaveLength(2);
+    expect(config.costs.charges?.[0].label).toBe('Honorarios');
+    expect(config.costs.charges?.[0].toMonth).toBe(4);
+    expect(config.costs.charges?.[1].label).toBe('Cargo');
     expect(config.extras).toHaveLength(1);
     expect(config.extras[0].toMonth).toBe(4);
   });

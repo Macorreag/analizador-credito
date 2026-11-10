@@ -103,23 +103,32 @@ export function buildLevers(config: LoanConfig, analysis: LoanAnalysis): Lever[]
     config.costs.insuranceMonthlyPct > 0 ||
     config.costs.monthlyFee > 0 ||
     config.costs.originationPct > 0 ||
-    config.costs.gmf;
+    config.costs.gmf ||
+    (config.costs.charges?.length ?? 0) > 0;
   if (hasCosts) {
     const withoutCosts = computeLoan({
       ...config,
-      costs: { insuranceMonthlyPct: 0, monthlyFee: 0, originationPct: 0, gmf: false },
+      costs: { insuranceMonthlyPct: 0, monthlyFee: 0, originationPct: 0, gmf: false, charges: [] },
     });
     if (withoutCosts.ok) {
       levers.push({
         id: 'remove-costs',
-        title: 'Quita seguros y comisiones',
+        title: 'Quita seguros, comisiones y cargos',
         description:
-          'Si el seguro no es obligatorio o puedes negociar la comisión de apertura y la cuota de manejo, ese dinero deja de costar interés.',
+          'Si el seguro no es obligatorio o puedes negociar la comisión, el cargo fijo y los cargos adicionales, ese dinero deja de costar interés.',
         savings: analysis.totalCost - withoutCosts.totalCost,
         monthsDelta: analysis.months - withoutCosts.months,
         paymentIncrease: withoutCosts.maxPayment - analysis.maxPayment,
         tone: 'save',
-        patch: { costs: { insuranceMonthlyPct: 0, monthlyFee: 0, originationPct: 0, gmf: false } },
+        patch: {
+          costs: {
+            insuranceMonthlyPct: 0,
+            monthlyFee: 0,
+            originationPct: 0,
+            gmf: false,
+            charges: [],
+          },
+        },
         applyLabel: 'Simular sin costos',
       });
     }

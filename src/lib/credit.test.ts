@@ -56,12 +56,14 @@ function expectFinancialIdentities(analysis: LoanAnalysis): void {
     analysis.costBreakdown.interest +
       analysis.costBreakdown.insurance +
       analysis.costBreakdown.fees +
-      analysis.costBreakdown.gmf,
+      analysis.costBreakdown.gmf +
+      analysis.costBreakdown.charges,
     2,
   );
   expect(analysis.totalPayments).toBeCloseTo(sumRows(analysis, 'total'), 2);
   expect(analysis.totalInterest).toBeCloseTo(sumRows(analysis, 'interest'), 2);
   expect(analysis.totalExtras).toBeCloseTo(sumRows(analysis, 'extra'), 2);
+  expect(analysis.totalCharges).toBeCloseTo(sumRows(analysis, 'charges'), 2);
   expect(analysis.totalGmf).toBeCloseTo(analysis.disbursementGmf + sumRows(analysis, 'gmf'), 2);
 }
 
@@ -214,6 +216,93 @@ describe('abonos a capital', () => {
   });
 });
 
+describe('cargos y notas opcionales', () => {
+  it('suma cargos mensuales, uniques y notas crédito al pago y al costo', () => {
+    const base = computeLoan(makeConfig());
+    const charges = [
+      {
+        id: 'honorarios',
+        label: 'Honorarios',
+        amount: 50_000,
+        frequency: 'monthly' as const,
+        fromMonth: 1,
+        toMonth: null,
+      },
+      {
+        id: 'mora',
+        label: 'Interés de mora',
+        amount: 20_000,
+        frequency: 'monthly' as const,
+        fromMonth: 3,
+        toMonth: 5,
+      },
+      {
+        id: 'nota',
+        label: 'Nota crédito',
+        amount: -100_000,
+        frequency: 'once' as const,
+        fromMonth: 2,
+      },
+    ];
+    const withCharges = computeLoan(makeConfig({ costs: { ...makeConfig().costs, charges } }));
+
+    expect(withCharges.rows[0].charges).toBeCloseTo(50_000, 6);
+    expect(withCharges.rows[1].charges).toBeCloseTo(-50_000, 6);
+    expect(withCharges.rows[2].charges).toBeCloseTo(70_000, 6);
+    expect(withCharges.rows[5].charges).toBeCloseTo(50_000, 6);
+    expect(withCharges.totalCharges).toBeCloseTo(
+      50_000 * withCharges.months + 20_000 * 3 - 100_000,
+      6,
+    );
+    expect(withCharges.totalCost).toBeCloseTo(base.totalCost + withCharges.totalCharges, 6);
+    expect(withCharges.maxPayment).toBeGreaterThan(base.maxPayment);
+    expectFinancialIdentities(withCharges);
+  });
+
+  it('no aplica GMF sobre un pago neto negativo', () => {
+    const withGmfAndCredit = computeLoan(
+      makeConfig({
+        costs: {
+          ...makeConfig().costs,
+          gmf: true,
+          charges: [
+            {
+              id: 'credit',
+              label: 'Nota crédito',
+              amount: -10_000_000,
+              frequency: 'once' as const,
+              fromMonth: 1,
+            },
+          ],
+        },
+      }),
+    );
+    expect(withGmfAndCredit.rows[0].gmf).toBe(0);
+    expectFinancialIdentities(withGmfAndCredit);
+  });
+
+  it('rechaza cargos fuera del plazo', () => {
+    const analysis = computeLoan(
+      makeConfig({
+        costs: {
+          ...makeConfig().costs,
+          charges: [
+            {
+              id: 'late',
+              label: 'Honorarios',
+              amount: 50_000,
+              frequency: 'monthly' as const,
+              fromMonth: TERM + 1,
+            },
+          ],
+        },
+      }),
+    );
+    expect(analysis.ok).toBe(false);
+    expect(analysis.issues.some((issue) => issue.field === 'costs')).toBe(true);
+  });
+});
+
 describe('sistemas alemán y americano', () => {
   it('alemán amortiza capital constante y paga menos intereses que el francés', () => {
     const french = computeLoan(makeConfig());
@@ -285,7 +374,7 @@ describe('periodos de gracia', () => {
 });
 
 describe('seguros, comisiones y GMF', () => {
-  it('incluye seguro y cuota de manejo en la cuota y en el costo', () => {
+  it('incluye seguro y cargo fijo en la cuota y en el costo', () => {
     const clean = computeLoan(makeConfig());
     const withCosts = computeLoan(
       makeConfig({

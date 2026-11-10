@@ -112,14 +112,16 @@ En la práctica, reducir plazo ahorra más intereses; reducir cuota libera flujo
 
 ## 6. Costos
 
-| Costo                 | Modelo                                                |
-| --------------------- | ----------------------------------------------------- |
-| Seguro de vida deudor | `saldo_inicial_mes × tasa_seguro_mensual`             |
-| Cuota de manejo       | Valor fijo por mes.                                   |
-| Comisión de apertura  | `P × % / 100`, pagada al desembolso.                  |
-| GMF (4×1.000)         | `0,4%` del desembolso y de cada pago (cuota + abono). |
+| Costo                        | Modelo                                                |
+| ---------------------------- | ----------------------------------------------------- |
+| Seguro de vida deudor        | `saldo_inicial_mes × tasa_seguro_mensual`             |
+| Cargo fijo (cuota de manejo) | Valor fijo por mes.                                   |
+| Comisión de apertura         | `P × % / 100`, pagada al desembolso.                  |
+| GMF (4×1.000)                | `0,4%` del desembolso y de cada pago (cuota + abono). |
 
 El seguro se calcula sobre el saldo al **inicio** del mes, antes de la amortización, que es una convención habitual. La comisión de apertura no se financia: se resta del desembolso neto.
+
+Los **cargos y notas opcionales** son una lista de conceptos (honorarios, interés de mora, otros cargos fijos, notas crédito). Cada uno tiene un importe, una frecuencia (`mensual` o `único`) y un rango de meses. Se suman a la cuota y al flujo de caja; un importe negativo reduce el pago y el costo. No recalculan el capital por sí mismos. La mora se modela como un valor fijo estimado: no depende de días de atraso ni de una tasa de mora.
 
 > El GMF tiene exenciones y reglas de causación. Aquí se modela como aproximación configurable y desactivable.
 
@@ -191,6 +193,7 @@ Cobrar por encima de la usura es ilegal en Colombia. La app no constituye asesor
 - Monto > 0; tasa entre 0% y 1.000% EA; plazo entre 1 y 600 meses.
 - Gracia < plazo; abonos dentro del plazo; montos no negativos.
 - Seguro ≤ 5% mensual; apertura ≤ 50%; advertencias por valores inusuales.
+- Cargos y notas: máximo 20 conceptos, importes finitos, mes inicial/final dentro del plazo; los negativos se aceptan como notas crédito.
 - Si hay errores, el motor devuelve `ok: false`, lista de issues y no calcula la tabla.
 
 ## 13. Pruebas

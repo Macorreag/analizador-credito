@@ -43,7 +43,7 @@ function buildComposition(
     interest: row.interest,
     principal: row.principal,
     extra: row.extra,
-    other: row.insurance + row.fee + row.gmf,
+    other: row.insurance + row.fee + row.gmf + row.charges,
     total: row.total,
   }));
 }
@@ -76,6 +76,7 @@ export function AmortizationPanel({
 
   const hasInsurance = analysis.rows.some((row) => row.insurance > 0);
   const hasFees = analysis.rows.some((row) => row.fee > 0);
+  const hasCharges = analysis.rows.some((row) => Math.abs(row.charges) > 0.005);
   const hasGmf = analysis.rows.some((row) => row.gmf > 0);
   const extrasSavings = baseline.totalInterest - analysis.totalInterest;
 
@@ -206,6 +207,7 @@ export function AmortizationPanel({
                   <th scope="col">Capital</th>
                   {hasInsurance ? <th scope="col">Seguro</th> : null}
                   {hasFees ? <th scope="col">Comisión</th> : null}
+                  {hasCharges ? <th scope="col">Cargos</th> : null}
                   {hasGmf ? <th scope="col">GMF</th> : null}
                   <th scope="col">Abono</th>
                   <th scope="col">Saldo</th>
@@ -244,6 +246,11 @@ export function AmortizationPanel({
                       <td className="cell-muted">{formatCOP(row.insurance)}</td>
                     ) : null}
                     {hasFees ? <td className="cell-muted">{formatCOP(row.fee)}</td> : null}
+                    {hasCharges ? (
+                      <td className={row.charges < 0 ? 'cell-teal' : 'cell-rust'}>
+                        {formatCOP(row.charges)}
+                      </td>
+                    ) : null}
                     {hasGmf ? <td className="cell-muted">{formatCOP(row.gmf)}</td> : null}
                     <td className="cell-teal">{row.extra > 0 ? formatCOP(row.extra) : '—'}</td>
                     <td>{formatCOP(row.balance)}</td>

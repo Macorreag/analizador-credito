@@ -2575,3 +2575,118 @@
     break-inside: avoid;
   }
 }
+
+/* ---------- Cargos y notas opcionales ---------- */
+.charge-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.charge-section-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.charge-add-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.charge-add {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+}
+
+.charge-list {
+  display: grid;
+  gap: 7px;
+}
+
+.charge-row {
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.charge-row-head {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.charge-label {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+}
+
+.charge-remove {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.charge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.charge-field {
+  display: block;
+  min-width: 0;
+}
+
+.charge-field > span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.charge-field .input,
+.charge-field .select {
+  padding: 6px 7px;
+  font-size: 10.5px;
+}
+
+.charge-field--note {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.charge-field--note em {
+  padding: 6px 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-style: normal;
+}
+
+.charge-help {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 8.5px;
+  line-height: 1.4;
+}
+
+.charge-help.is-credit {
+  color: var(--teal-bright);
+}

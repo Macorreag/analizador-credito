@@ -62,8 +62,24 @@ export function MethodologyPanel({
           <div className="method-block">
             <h3>Costo real</h3>
             <p>
-              Intereses, seguro de vida deudor, cuota de manejo, comisión de apertura y GMF. La TIR
-              del flujo de caja se anualiza para obtener el costo efectivo anual.
+              Intereses, seguro de vida deudor, cargo fijo, comisión de apertura, GMF y cargos o
+              notas opcionales. La TIR del flujo de caja se anualiza para obtener el costo efectivo
+              anual.
+            </p>
+          </div>
+          <div className="method-block">
+            <h3>Cargos y notas</h3>
+            <p>
+              Puedes añadir conceptos como honorarios, interés de mora, otros cargos fijos o notas
+              crédito. Cada uno puede ser mensual o único, con un rango de meses. Un valor negativo
+              actúa como nota crédito y reduce el pago y el costo.
+            </p>
+          </div>
+          <div className="method-block">
+            <h3>Escenarios y sensibilidad</h3>
+            <p>
+              La grilla tasa × plazo y la escalera de abonos se calculan sin abonos para aislar cada
+              variable. Los escenarios guardados comparan planes completos, con sus cargos y notas.
             </p>
           </div>
           <div className="method-block">
@@ -110,8 +126,8 @@ export function MethodologyPanel({
           </div>
           <p className="table-note">
             El interés se calcula sobre el saldo al inicio del mes. El seguro se calcula sobre ese
-            mismo saldo; la cuota de manejo es fija. Los abonos se aplican después de la cuota del
-            mes y se limitan al saldo pendiente.
+            mismo saldo; el cargo fijo no depende del saldo. Los abonos se aplican después de la
+            cuota del mes y se limitan al saldo pendiente.
           </p>
         </Card>
       </section>

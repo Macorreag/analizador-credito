@@ -55,6 +55,7 @@ describe('render de la aplicación', () => {
     expect(html).toContain('El crédito');
     expect(html).toContain('Tasa efectiva anual');
     expect(html).toContain('Abonos');
+    expect(html).toContain('Cargos y notas');
   });
 
   it('renderiza la amortización con gráficos y tabla', () => {

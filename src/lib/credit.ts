@@ -20,15 +20,32 @@ export interface ExtraPayment {
   toMonth?: number | null;
 }
 
+export type ChargeFrequency = 'once' | 'monthly';
+
+/**
+ * Cargo o nota adicional al pago. El valor puede ser negativo para una nota
+ * crédito (reduce el pago y el costo). No modifica el capital por sí mismo.
+ */
+export interface ExtraCharge {
+  id: string;
+  label: string;
+  amount: number;
+  frequency: ChargeFrequency;
+  fromMonth: number;
+  toMonth?: number | null;
+}
+
 export interface CostConfig {
   /** Seguro de vida deudor, % mensual sobre el saldo al inicio del mes. */
   insuranceMonthlyPct: number;
-  /** Cuota de manejo o administración, valor fijo mensual. */
+  /** Cargo fijo mensual (cuota de manejo, administración u otro). */
   monthlyFee: number;
   /** Comisión de apertura/estudio, % del capital. Se paga al desembolsar. */
   originationPct: number;
   /** GMF (4 x 1.000) sobre desembolso y pagos. */
   gmf: boolean;
+  /** Cargos fijos, honorarios, mora, otros o notas crédito (opcional). */
+  charges?: ExtraCharge[];
 }
 
 export interface LoanConfig {
@@ -63,6 +80,8 @@ export interface PaymentRow {
   principal: number;
   insurance: number;
   fee: number;
+  /** Cargos y notas adicionales del mes (puede ser negativo). */
+  charges: number;
   gmf: number;
   extra: number;
   /** Cuota regular del mes: interés + capital + seguro + comisión. */
@@ -79,6 +98,7 @@ export interface CostBreakdown {
   insurance: number;
   fees: number;
   gmf: number;
+  charges: number;
 }
 
 export interface LoanAnalysis {
@@ -96,6 +116,7 @@ export interface LoanAnalysis {
   totalInterest: number;
   totalInsurance: number;
   totalMonthlyFees: number;
+  totalCharges: number;
   originationFee: number;
   disbursementGmf: number;
   totalGmf: number;
@@ -174,6 +195,34 @@ export function extraAmountForMonth(extras: readonly ExtraPayment[], month: numb
       total += amount;
     } else if (extra.frequency === 'annual') {
       if ((month - from) % 12 === 0) total += amount;
+    }
+  }
+  return total;
+}
+
+/**
+ * Suma los cargos/notas que aplican en un mes. Los importes negativos son
+ * notas crédito y reducen el pago del mes.
+ */
+export function chargeAmountForMonth(
+  charges: readonly ExtraCharge[] | undefined,
+  month: number,
+): number {
+  if (!Array.isArray(charges)) return 0;
+  let total = 0;
+  for (const charge of charges) {
+    const amount = Number.isFinite(charge.amount) ? charge.amount : 0;
+    if (amount === 0) continue;
+    const from = Math.max(1, Math.round(charge.fromMonth));
+    const to =
+      charge.toMonth == null || !Number.isFinite(charge.toMonth)
+        ? Number.POSITIVE_INFINITY
+        : Math.max(from, Math.round(charge.toMonth));
+    if (month < from || month > to) continue;
+    if (charge.frequency === 'once') {
+      if (month === from) total += amount;
+    } else if (charge.frequency === 'monthly') {
+      total += amount;
     }
   }
   return total;
@@ -277,7 +326,7 @@ export function validateConfig(config: LoanConfig): ValidationIssue[] {
       pushIssue(issues, 'costs', 'warning', 'Un seguro mensual mayor a 1% del saldo es inusual.');
     }
     if (!Number.isFinite(costs.monthlyFee) || costs.monthlyFee < 0) {
-      pushIssue(issues, 'costs', 'error', 'La cuota de manejo no puede ser negativa.');
+      pushIssue(issues, 'costs', 'error', 'El cargo fijo mensual no puede ser negativo.');
     }
     if (!Number.isFinite(costs.originationPct) || costs.originationPct < 0) {
       pushIssue(issues, 'costs', 'error', 'La comisión de apertura no puede ser negativa.');
@@ -289,6 +338,49 @@ export function validateConfig(config: LoanConfig): ValidationIssue[] {
     if (typeof costs.gmf !== 'boolean') {
       pushIssue(issues, 'costs', 'error', 'La opción de GMF no es válida.');
     }
+
+    const charges = Array.isArray(costs.charges) ? costs.charges : [];
+    if (charges.length > 20) {
+      pushIssue(issues, 'costs', 'error', 'Hay demasiados cargos configurados (máximo 20).');
+    }
+    const maxMonth = Number.isFinite(termMonths) ? Math.round(termMonths) : 0;
+    charges.forEach((charge, index) => {
+      const label = `Cargo ${index + 1}`;
+      if (!charge || typeof charge !== 'object') {
+        pushIssue(issues, 'costs', 'error', `${label}: datos inválidos.`);
+        return;
+      }
+      if (typeof charge.label !== 'string' || charge.label.trim().length === 0) {
+        pushIssue(issues, 'costs', 'warning', `${label}: el concepto está vacío.`);
+      } else if (charge.label.length > 60) {
+        pushIssue(issues, 'costs', 'warning', `${label}: el concepto se recortará.`);
+      }
+      if (!Number.isFinite(charge.amount)) {
+        pushIssue(issues, 'costs', 'error', `${label}: el valor debe ser un número.`);
+      } else if (charge.amount === 0) {
+        pushIssue(issues, 'costs', 'warning', `${label}: el valor es cero y no tendrá efecto.`);
+      }
+      if (charge.frequency !== 'once' && charge.frequency !== 'monthly') {
+        pushIssue(issues, 'costs', 'error', `${label}: frecuencia no reconocida.`);
+      }
+      if (!Number.isFinite(charge.fromMonth) || charge.fromMonth < 1) {
+        pushIssue(issues, 'costs', 'error', `${label}: el mes inicial debe ser 1 o mayor.`);
+      } else if (maxMonth > 0 && Math.round(charge.fromMonth) > maxMonth) {
+        pushIssue(issues, 'costs', 'error', `${label}: el mes inicial supera el plazo.`);
+      }
+      if (charge.toMonth != null) {
+        if (!Number.isFinite(charge.toMonth) || charge.toMonth < charge.fromMonth) {
+          pushIssue(
+            issues,
+            'costs',
+            'error',
+            `${label}: el mes final debe ser mayor o igual al inicial.`,
+          );
+        } else if (maxMonth > 0 && Math.round(charge.toMonth) > maxMonth) {
+          pushIssue(issues, 'costs', 'error', `${label}: el mes final supera el plazo.`);
+        }
+      }
+    });
   }
 
   if (!Array.isArray(extras)) {
@@ -365,6 +457,7 @@ function emptyAnalysis(
     totalInterest: 0,
     totalInsurance: 0,
     totalMonthlyFees: 0,
+    totalCharges: 0,
     originationFee: 0,
     disbursementGmf: 0,
     totalGmf: 0,
@@ -372,7 +465,7 @@ function emptyAnalysis(
     totalCost: 0,
     totalPaid: 0,
     totalPayments: 0,
-    costBreakdown: { interest: 0, insurance: 0, fees: 0, gmf: 0 },
+    costBreakdown: { interest: 0, insurance: 0, fees: 0, gmf: 0, charges: 0 },
     costRatioPct: 0,
     netDisbursed: 0,
     monthlyIrr: null,
@@ -413,6 +506,16 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
       : Math.min(Math.max(0, Math.round(config.graceMonths)), scheduledMonths - 1);
   const insuranceRate = Math.max(0, config.costs.insuranceMonthlyPct) / 100;
   const monthlyFee = Math.max(0, config.costs.monthlyFee);
+  const charges = (config.costs.charges ?? [])
+    .filter((charge) => Number.isFinite(charge.amount) && charge.amount !== 0)
+    .map((charge) => ({
+      ...charge,
+      fromMonth: Math.max(1, Math.min(scheduledMonths, Math.round(charge.fromMonth))),
+      toMonth:
+        charge.toMonth == null
+          ? null
+          : Math.max(1, Math.min(scheduledMonths, Math.round(charge.toMonth))),
+    }));
   const originationFee = principal * (Math.max(0, config.costs.originationPct) / 100);
   const disbursementGmf = config.costs.gmf ? principal * GMF_RATE : 0;
   const netDisbursed = principal - originationFee - disbursementGmf;
@@ -433,6 +536,7 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
   let totalInterest = 0;
   let totalInsurance = 0;
   let totalMonthlyFees = 0;
+  let totalCharges = 0;
   let totalGmf = 0;
   let totalExtras = 0;
   let totalPayments = 0;
@@ -499,13 +603,15 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
     const extra = Math.min(extraRequested, balance);
     balance = Math.max(0, balance - extra);
 
-    const payment = regularPayment + insurance + fee;
-    const gmf = config.costs.gmf ? (payment + extra) * GMF_RATE : 0;
+    const monthlyCharges = chargeAmountForMonth(charges, month);
+    const payment = regularPayment + insurance + fee + monthlyCharges;
+    const gmf = config.costs.gmf ? Math.max(0, payment + extra) * GMF_RATE : 0;
 
     totalInterest += interest;
     totalCapitalizedInterest += capitalizedInterest;
     totalInsurance += insurance;
     totalMonthlyFees += fee;
+    totalCharges += monthlyCharges;
     totalGmf += gmf;
     totalExtras += extra;
     totalPayments += payment + extra + gmf;
@@ -519,6 +625,7 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
       principal: principalPayment,
       insurance,
       fee,
+      charges: monthlyCharges,
       gmf,
       extra,
       payment,
@@ -531,7 +638,7 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
   const fullyAmortized = balance <= BALANCE_EPSILON;
   const totalFees = totalMonthlyFees + originationFee;
   const totalGmfAll = totalGmf + disbursementGmf;
-  const totalCost = totalInterest + totalInsurance + totalFees + totalGmfAll;
+  const totalCost = totalInterest + totalInsurance + totalFees + totalGmfAll + totalCharges;
   const totalPaid = totalPayments + originationFee + disbursementGmf;
 
   const cashFlows = [netDisbursed, ...rows.map((row) => -row.total)];
@@ -559,6 +666,7 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
     totalInterest,
     totalInsurance,
     totalMonthlyFees,
+    totalCharges,
     originationFee,
     disbursementGmf,
     totalGmf: totalGmfAll,
@@ -571,6 +679,7 @@ export function computeLoan(config: LoanConfig): LoanAnalysis {
       insurance: totalInsurance,
       fees: totalFees,
       gmf: totalGmfAll,
+      charges: totalCharges,
     },
     costRatioPct: principal > 0 ? (totalCost / principal) * 100 : 0,
     netDisbursed,

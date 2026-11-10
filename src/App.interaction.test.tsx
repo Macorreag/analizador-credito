@@ -79,6 +79,25 @@ describe('interacción ligera', () => {
     expect(container.textContent).toContain('Cuota / ingreso');
   });
 
+  it('agrega un cargo opcional y lo refleja en el costo', () => {
+    const add = container.querySelector<HTMLSelectElement>('.charge-add');
+    expect(add).not.toBeNull();
+    act(() => {
+      if (add) {
+        add.value = 'Honorarios';
+        add.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    expect(container.textContent).toContain('Honorarios');
+
+    const value = container.querySelector<HTMLInputElement>('input[aria-label^="Valor de"]');
+    expect(value).not.toBeNull();
+    act(() => {
+      if (value) setInputValue(value, '50000');
+    });
+    expect(container.textContent).toContain('Cargos / notas');
+  });
+
   it('cambia el monto y lo refleja en el resumen', () => {
     const principal = container.querySelector<HTMLInputElement>('#principal');
     expect(principal).not.toBeNull();

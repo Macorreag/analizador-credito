@@ -203,6 +203,7 @@ export function DashboardPanel({
   const capitalShare = (analysis.principal / Math.max(analysis.totalPaid, 1)) * 100;
   const otherCost = analysis.totalCost - analysis.totalInterest;
   const otherShare = (otherCost / Math.max(analysis.totalPaid, 1)) * 100;
+  const hasCharges = analysis.rows.some((row) => Math.abs(row.charges) > 0.005);
   const usuryMargin = usuryEaPct - config.annualRatePct;
   const usuryTone =
     usuryEaPct <= 0
@@ -424,6 +425,18 @@ export function DashboardPanel({
               <b>{formatCOP(analysis.totalGmf)}</b>
               <em>{formatPct((analysis.totalGmf / Math.max(analysis.totalPaid, 1)) * 100, 1)}</em>
             </div>
+            {hasCharges ? (
+              <div className="dash-cost-row">
+                <span className="dot" style={{ color: '#B58AC9' }} />
+                <span>Cargos / notas</span>
+                <b className={analysis.totalCharges < 0 ? 'cell-teal' : ''}>
+                  {formatCOP(analysis.totalCharges)}
+                </b>
+                <em>
+                  {formatPct((analysis.totalCharges / Math.max(analysis.totalPaid, 1)) * 100, 1)}
+                </em>
+              </div>
+            ) : null}
           </div>
         </DashCard>
 
@@ -653,6 +666,7 @@ export function DashboardPanel({
                   <th scope="col">Interés</th>
                   <th scope="col">Capital</th>
                   <th scope="col">Abono</th>
+                  {hasCharges ? <th scope="col">Cargos</th> : null}
                   <th scope="col">Saldo</th>
                 </tr>
               </thead>
@@ -664,6 +678,11 @@ export function DashboardPanel({
                     <td className="cell-rust">{formatCOP(row.interest)}</td>
                     <td className="cell-gold">{formatCOP(row.principal)}</td>
                     <td className="cell-teal">{row.extra > 0 ? formatCOP(row.extra) : '—'}</td>
+                    {hasCharges ? (
+                      <td className={row.charges < 0 ? 'cell-teal' : 'cell-rust'}>
+                        {formatCOP(row.charges)}
+                      </td>
+                    ) : null}
                     <td className="cell-strong">{formatCOP(row.balance)}</td>
                   </tr>
                 ))}
@@ -671,7 +690,8 @@ export function DashboardPanel({
             </table>
           </div>
           <p className="dash-inline-note">
-            La cuota incluye seguro y comisión. El detalle completo incluye GMF y exportación CSV.
+            La cuota incluye seguro, comisión{hasCharges ? ' y cargos' : ''}. El detalle completo
+            incluye GMF y exportación CSV.
           </p>
         </DashCard>
 

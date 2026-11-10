@@ -4,6 +4,23 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-11-10
+
+### Añadido
+
+- Cargos y notas opcionales por concepto: cargo fijo, honorarios, interés de mora, otros cargos y notas crédito.
+- Frecuencia mensual o única, con mes inicial y mes final opcional.
+- Importes negativos para notas crédito, con efecto en la cuota, el costo total, la TIR, la tabla y el CSV.
+- Columna “Cargos” en la tabla de amortización y en el detalle del dashboard.
+- Los cargos se integran en la sección de costos existente, plegada por defecto para no sobrecargar la interfaz.
+
+### Cambiado
+
+- “Cuota de manejo” pasa a llamarse **Cargo fijo mensual** en la interfaz, manteniendo el mismo campo del motor.
+- La sección de costos ahora se llama **Costos, cargos y GMF**.
+- El CSV incluye la columna y el total de **Cargos**.
+- La metodología documenta el nuevo modelo de cargos y notas.
+
 ## [1.1.0] — 2026-11-08
 
 ### Añadido
@@ -68,7 +85,8 @@ Todos los cambios relevantes se documentan aquí. El formato sigue [Keep a Chang
 - Muestra representativa de combinaciones para identidades contables.
 - Prueba de interacción ligera con jsdom.
 
-[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/Macorreag/analizador-credito/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.2.0
 [1.1.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.1.0
 [1.0.1]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Macorreag/analizador-credito/releases/tag/v1.0.0

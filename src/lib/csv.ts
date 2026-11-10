@@ -32,6 +32,7 @@ export function scheduleToCsv(analysis: LoanAnalysis, config: LoanConfig): strin
       'Capital',
       'Seguro',
       'Comisión',
+      'Cargos',
       'GMF',
       'Cuota',
       'Abono extra',
@@ -53,6 +54,7 @@ export function scheduleToCsv(analysis: LoanAnalysis, config: LoanConfig): strin
         csvNumber(row.principal),
         csvNumber(row.insurance),
         csvNumber(row.fee),
+        csvNumber(row.charges),
         csvNumber(row.gmf),
         csvNumber(row.payment),
         csvNumber(row.extra),
@@ -67,6 +69,7 @@ export function scheduleToCsv(analysis: LoanAnalysis, config: LoanConfig): strin
   lines.push(`Intereses;${csvNumber(analysis.totalInterest)}`);
   lines.push(`Seguros;${csvNumber(analysis.totalInsurance)}`);
   lines.push(`Comisiones;${csvNumber(analysis.costBreakdown.fees)}`);
+  lines.push(`Cargos;${csvNumber(analysis.totalCharges)}`);
   lines.push(`GMF;${csvNumber(analysis.totalGmf)}`);
   lines.push(`Costo total;${csvNumber(analysis.totalCost)}`);
   lines.push(`Total pagado;${csvNumber(analysis.totalPaid)}`);

@@ -55,7 +55,7 @@ La vista inicial es un **dashboard** con todos los números del plan: KPIs, comp
 - Conversión entre **EA**, **tasa nominal anual (NAMV)** y **tasa periódica mensual**.
 - **Gracia** con pago de intereses o gracia total con capitalización.
 - Estrategias de abono: **reducir plazo** (misma cuota) y **reducir cuota** (mismo plazo).
-- Costos: seguro de vida deudor (% del saldo), cuota de manejo, comisión de apertura y **GMF 4×1.000**.
+- Costos: seguro de vida deudor (% del saldo), cargo fijo, comisión de apertura, **GMF 4×1.000** y cargos/notas opcionales (honorarios, mora, otros, notas crédito).
 - **TIR** del flujo real para estimar el costo efectivo anual.
 - Comparación de sistemas, estrategias, palancas y escenarios.
 

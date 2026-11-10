@@ -41,7 +41,10 @@ function readHash(): TabId {
 function cloneConfig(config: LoanConfig): LoanConfig {
   return {
     ...config,
-    costs: { ...config.costs },
+    costs: {
+      ...config.costs,
+      charges: (config.costs.charges ?? []).map((charge) => ({ ...charge })),
+    },
     extras: config.extras.map((extra) => ({ ...extra })),
   };
 }

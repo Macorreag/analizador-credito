@@ -1,6 +1,6 @@
 import { DEFAULT_AFFORDABILITY, DEFAULT_CONFIG, DEFAULT_USURY_EA_PCT } from './defaults';
 import { sanitizeAffordabilityInput, type AffordabilityInput } from './affordability';
-import type { LoanConfig } from './credit';
+import type { ExtraCharge, LoanConfig } from './credit';
 import { MAX_SCENARIOS, type SavedScenario } from './scenarios';
 
 export const STORAGE_KEY = 'analizador-credito:v1';
@@ -32,6 +32,36 @@ export function sanitizeConfig(value: unknown): LoanConfig {
 
   const costs = isRecord(value.costs) ? value.costs : {};
   const rawExtras = Array.isArray(value.extras) ? value.extras.slice(0, 60) : [];
+  const rawCharges = Array.isArray(costs.charges) ? costs.charges.slice(0, 20) : [];
+  const charges = rawCharges.flatMap((item, index): ExtraCharge[] => {
+    if (!isRecord(item)) return [];
+    const frequency =
+      item.frequency === 'once' || item.frequency === 'monthly' ? item.frequency : 'monthly';
+    const label =
+      typeof item.label === 'string' && item.label.trim().length > 0
+        ? item.label.trim().slice(0, 60)
+        : 'Cargo';
+    const amount = finiteNumber(item.amount, 0, -1e15, 1e15);
+    const fromMonth = clampInt(item.fromMonth, 1, 1, 600);
+    const toMonth =
+      typeof item.toMonth === 'number' && Number.isFinite(item.toMonth)
+        ? clampInt(item.toMonth, fromMonth, fromMonth, 600)
+        : null;
+    return [
+      {
+        id:
+          typeof item.id === 'string' && item.id.length > 0
+            ? item.id.slice(0, 64)
+            : `charge-${index}-${fromMonth}-${label}`,
+        label,
+        amount,
+        frequency,
+        fromMonth,
+        toMonth,
+      },
+    ];
+  });
+
   const extras = rawExtras.flatMap((item): LoanConfig['extras'] => {
     if (!isRecord(item)) return [];
     const frequency =
@@ -101,6 +131,7 @@ export function sanitizeConfig(value: unknown): LoanConfig {
         50,
       ),
       gmf: costs.gmf === true,
+      charges,
     },
     startDate,
   };

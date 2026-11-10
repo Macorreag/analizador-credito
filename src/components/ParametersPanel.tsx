@@ -4,13 +4,14 @@ import {
   monthlyFromNominal,
   monthlyRateFromEA,
   type CostConfig,
+  type ExtraCharge,
   type GraceType,
   type LoanAnalysis,
   type LoanConfig,
 } from '../lib/credit';
 import { formatCOP, formatPct } from '../lib/format';
 import { Field, MoneyInput, NumberInput, Segmented } from './ui';
-import { RefreshIcon } from './icons';
+import { RefreshIcon, XIcon } from './icons';
 
 type RateMode = 'ea' | 'monthly' | 'nominal';
 
@@ -79,13 +80,42 @@ export function ParametersPanel({
   const errors = analysis.issues.filter((issue) => issue.severity === 'error');
   const warnings = analysis.issues.filter((issue) => issue.severity === 'warning');
   const hasError = (field: string) => errors.some((issue) => issue.field === field);
+  const charges = config.costs.charges ?? [];
   const activeCosts = [
     config.costs.insuranceMonthlyPct > 0,
     config.costs.monthlyFee > 0,
     config.costs.originationPct > 0,
     config.costs.gmf,
+    charges.length > 0,
   ].filter(Boolean).length;
   const [costsOpen, setCostsOpen] = useState(activeCosts > 0);
+
+  function addCharge(label: string) {
+    if (charges.length >= 20) return;
+    const id =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `charge-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const charge: ExtraCharge = {
+      id,
+      label,
+      amount: 0,
+      frequency: 'monthly',
+      fromMonth: 1,
+      toMonth: null,
+    };
+    onCostsChange({ charges: [...charges, charge] });
+  }
+
+  function updateCharge(id: string, patch: Partial<ExtraCharge>) {
+    onCostsChange({
+      charges: charges.map((charge) => (charge.id === id ? { ...charge, ...patch } : charge)),
+    });
+  }
+
+  function removeCharge(id: string) {
+    onCostsChange({ charges: charges.filter((charge) => charge.id !== id) });
+  }
 
   function setGraceMonths(value: number) {
     const months = Math.max(0, Math.round(value));
@@ -312,7 +342,7 @@ export function ParametersPanel({
         onToggle={(event) => setCostsOpen(event.currentTarget.open)}
       >
         <summary>
-          <span>Costos, seguros y GMF</span>
+          <span>Costos, cargos y GMF</span>
           <span className="inline">
             {activeCosts > 0 ? <span className="badge badge--teal">{activeCosts}</span> : null}
           </span>
@@ -335,7 +365,11 @@ export function ParametersPanel({
                 invalid={hasError('costs')}
               />
             </Field>
-            <Field label="Cuota de manejo" htmlFor="fee" hint="Valor fijo mensual.">
+            <Field
+              label="Cargo fijo mensual"
+              htmlFor="fee"
+              hint="Cuota de manejo, administración u otro fijo."
+            >
               <MoneyInput
                 id="fee"
                 value={config.costs.monthlyFee}
@@ -382,6 +416,152 @@ export function ParametersPanel({
               <small>0,4% sobre el desembolso y sobre cada pago.</small>
             </span>
           </label>
+
+          <div className="charge-section">
+            <div className="charge-section-head">
+              <div>
+                <div className="charge-section-title">
+                  Cargos y notas <span className="badge">opcional</span>
+                </div>
+                <p className="field-hint">
+                  Honorarios, mora, otros cargos o notas crédito. Se suman al pago del mes; usa un
+                  valor negativo para una nota crédito.
+                </p>
+              </div>
+            </div>
+
+            <div className="charge-add-row">
+              <select
+                className="select charge-add"
+                value=""
+                onChange={(event) => {
+                  if (event.target.value) addCharge(event.target.value);
+                }}
+                aria-label="Agregar un cargo o nota"
+              >
+                <option value="">+ Agregar concepto…</option>
+                <option value="Honorarios">Honorarios</option>
+                <option value="Interés de mora">Interés de mora</option>
+                <option value="Otros cargos fijos">Otros cargos fijos</option>
+                <option value="Nota crédito">Nota crédito</option>
+                <option value="Cargo fijo">Cargo fijo</option>
+              </select>
+              <span className="tiny">{charges.length}/20</span>
+            </div>
+
+            {charges.length === 0 ? (
+              <p className="tiny">Sin cargos adicionales.</p>
+            ) : (
+              <div className="charge-list">
+                {charges.map((charge, index) => (
+                  <div className="charge-row" key={charge.id}>
+                    <div className="charge-row-head">
+                      <input
+                        className="input charge-label"
+                        value={charge.label}
+                        maxLength={60}
+                        placeholder="Concepto"
+                        onChange={(event) => updateCharge(charge.id, { label: event.target.value })}
+                        aria-label={`Concepto del cargo ${index + 1}`}
+                      />
+                      <button
+                        type="button"
+                        className="icon-btn charge-remove"
+                        onClick={() => removeCharge(charge.id)}
+                        aria-label={`Eliminar ${charge.label || `cargo ${index + 1}`}`}
+                      >
+                        <XIcon size={12} />
+                      </button>
+                    </div>
+                    <div className="charge-grid">
+                      <label className="charge-field">
+                        <span>Valor</span>
+                        <NumberInput
+                          value={charge.amount}
+                          onChange={(value) => updateCharge(charge.id, { amount: value })}
+                          step={1_000}
+                          prefix="$"
+                          aria-label={`Valor de ${charge.label || `cargo ${index + 1}`}`}
+                        />
+                      </label>
+                      <label className="charge-field">
+                        <span>Frecuencia</span>
+                        <select
+                          className="select"
+                          value={charge.frequency}
+                          onChange={(event) =>
+                            updateCharge(charge.id, {
+                              frequency: event.target.value as ExtraCharge['frequency'],
+                              toMonth: event.target.value === 'once' ? null : charge.toMonth,
+                            })
+                          }
+                          aria-label={`Frecuencia de ${charge.label || `cargo ${index + 1}`}`}
+                        >
+                          <option value="monthly">Mensual</option>
+                          <option value="once">Único</option>
+                        </select>
+                      </label>
+                      <label className="charge-field">
+                        <span>Desde mes</span>
+                        <NumberInput
+                          value={charge.fromMonth}
+                          onChange={(value) =>
+                            updateCharge(charge.id, {
+                              fromMonth: Math.max(
+                                1,
+                                Math.min(config.termMonths, Math.round(value)),
+                              ),
+                            })
+                          }
+                          min={1}
+                          max={config.termMonths}
+                          step={1}
+                          aria-label={`Mes inicial de ${charge.label || `cargo ${index + 1}`}`}
+                        />
+                      </label>
+                      {charge.frequency === 'monthly' ? (
+                        <label className="charge-field">
+                          <span>Hasta mes</span>
+                          <NumberInput
+                            value={charge.toMonth ?? 0}
+                            onChange={(value) =>
+                              updateCharge(charge.id, {
+                                toMonth:
+                                  value <= 0
+                                    ? null
+                                    : Math.max(
+                                        charge.fromMonth,
+                                        Math.min(config.termMonths, Math.round(value)),
+                                      ),
+                              })
+                            }
+                            min={charge.fromMonth}
+                            max={config.termMonths}
+                            step={1}
+                            blankZero
+                            placeholder="Fin"
+                            aria-label={`Mes final de ${charge.label || `cargo ${index + 1}`}, vacío hasta el final`}
+                          />
+                        </label>
+                      ) : (
+                        <div className="charge-field charge-field--note">
+                          <span>Alcance</span>
+                          <em>Solo el mes {charge.fromMonth}</em>
+                        </div>
+                      )}
+                    </div>
+                    <p className={`charge-help ${charge.amount < 0 ? 'is-credit' : ''}`.trim()}>
+                      {charge.amount < 0
+                        ? 'Nota crédito: reduce el pago del mes.'
+                        : charge.amount === 0
+                          ? 'Define un valor para que tenga efecto.'
+                          : 'Cargo: se suma al pago del mes.'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </details>
 

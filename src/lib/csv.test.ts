@@ -43,6 +43,29 @@ describe('exportación CSV', () => {
     expect(csv).toContain('Plazo real (meses)');
   });
 
+  it('incluye cargos y notas opcionales', () => {
+    const analysis = computeLoan({
+      ...config,
+      costs: {
+        ...config.costs,
+        charges: [
+          {
+            id: 'honorarios',
+            label: 'Honorarios',
+            amount: 50_000,
+            frequency: 'monthly',
+            fromMonth: 1,
+            toMonth: null,
+          },
+        ],
+      },
+    });
+    const csv = scheduleToCsv(analysis, config);
+    expect(csv.split('\r\n')[1]).toContain('Cargos');
+    expect(csv).toContain('Cargos;');
+    expect(csv).toContain('50000,00');
+  });
+
   it('escapa celdas con punto y coma o comillas', () => {
     const analysis = computeLoan(config);
     const csv = scheduleToCsv(analysis, { ...config, startDate: null });
